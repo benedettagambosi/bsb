@@ -392,8 +392,6 @@ class Scaffold:
         report("Simulation runtime: {}".format(time_sim), level=2)
         if quit and hasattr(simulator, "quit"):
             simulator.quit()
-        time_sim = time.time() - t
-        report("Simulation runtime: {}".format(time_sim), level=2)
         return result_path
 
     def get_simulation(self, simulation_name):
