@@ -208,7 +208,7 @@ class ArborAdapter(SimulatorAdapter):
     casts = {"duration": float}
     required = ["duration"]
 
-    defaults = {"threads": psutil.cpu_count(logical=False), "profiling": True}
+    defaults = {"threads": 4, "profiling": True}
 
     def validate(self):
         pass
@@ -251,8 +251,9 @@ class ArborAdapter(SimulatorAdapter):
             )
         start = time.time()
         report("running simulation", level=1)
+        self.duration = 3
         for i in itertools.chain(np.arange(1, self.duration), (self.duration,)):
-            simulation.run(i)
+            simulation.run(i, dt=0.025)
             avg = (time.time() - start) / i
             report(
                 f"Simulated {i}/{self.duration}ms (avg {avg:.2f}s/ms)",
