@@ -734,15 +734,15 @@ def hdf5_gdf_plot_spike_raster(spike_recorders, input_region=None, fig=None, sho
     times in the first row and neuron IDs in the second row.
     """
 
-    cell_ids = [np.unique(spike_recorders[k][:, 1]) for k in spike_recorders.keys()]
+    cell_ids = [np.unique(spike_recorders[k][:, 0]) for k in spike_recorders.keys()]
     x = {}
     y = {}
     colors = {}
     ids = {}
 
     for cell_id, dataset in spike_recorders.items():
-        data = dataset[:, 0]
-        neurons = dataset[:, 1]
+        data = dataset[:, 1]
+        neurons = dataset[:, 0]
         attrs = dict(dataset.attrs)
         label = attrs["label"]
         colors[label] = attrs["color"]
@@ -783,7 +783,7 @@ def hdf5_gdf_plot_spike_raster(spike_recorders, input_region=None, fig=None, sho
             show=False,
             color=colors[l],
             input_region=input_region,
-            **kwargs,
+            #**kwargs,
         )
     if show:
         fig.show()
