@@ -539,7 +539,7 @@ class NestAdapter(SimulatorAdapter):
         report("Simulating...", level=2)
         tick = time.time()
         with simulator.RunManager():
-            for oi, i in self.step_progress(self.duration, step=1):
+            for oi, i in self.step_progress(self.duration, step=dt):
                 simulator.Run(i - oi)
                 self.progress(i)
         report(f"Simulation done. {time.time() - tick:.2f}s elapsed.", level=2)
@@ -698,6 +698,7 @@ class NestAdapter(SimulatorAdapter):
         """
         for cell_model in self.cell_models.values():
             # Get the cell type's placement information
+            print(cell_model.name)
             ps = self.scaffold.get_placement_set(cell_model.name)
             nest_name = self.suffixed(cell_model.name)
             # Create the population's model
@@ -706,9 +707,10 @@ class NestAdapter(SimulatorAdapter):
             report(
                 "Creating {} {}...".format(len(scaffold_identifiers), nest_name), level=3
             )
-            nest_identifiers = self.nest.Create(nest_name, len(scaffold_identifiers))
-            cell_model.scaffold_identifiers.extend(scaffold_identifiers)
-            cell_model.nest_identifiers.extend(nest_identifiers)
+            if not len(scaffold_identifiers)==0:
+                nest_identifiers = self.nest.Create(nest_name, len(scaffold_identifiers))
+                cell_model.scaffold_identifiers.extend(scaffold_identifiers)
+                cell_model.nest_identifiers.extend(nest_identifiers)
 
     def create_entities(self):
         # Create entities
@@ -1056,7 +1058,8 @@ class SpikeRecorder(SimulationRecorder):
                     times = file_spikes[:, 1]
                     scaffold_spikes = np.column_stack((scaffold_ids, times))
                     spikes = np.concatenate((spikes, scaffold_spikes))
-                os.remove(file)
+                # os.remove(file)
+                
         return spikes
 
     def get_meta(self):

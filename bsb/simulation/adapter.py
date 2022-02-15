@@ -127,7 +127,10 @@ class SimulatorAdapter(ConfigurableClass):
         return progress
 
     def step_progress(self, duration, step=1):
-        steps = itertools.chain(np.arange(0, duration), (duration,))
+        if duration % step == 0:
+            steps = itertools.chain(np.arange(0, duration, step), (duration,))
+        else:
+            steps = itertools.chain(np.arange(0, duration, step))
         a, b = itertools.tee(steps)
         next(b, None)
         yield from zip(a, b)
